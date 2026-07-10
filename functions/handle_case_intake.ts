@@ -143,10 +143,17 @@ export async function executeCaseIntake(client: any, inputs: any) {
       console.log("Posting to Slack...");
       const postResult = await client.chat.postMessage({
         channel: inputs.channel_id,
-        thread_ts: inputs.message_ts, // Post in thread
         text: `New Case Detected: ${caseId}`,
         blocks: processedBlocks as any
       });
+      
+      if (!postResult.ok) {
+        console.error("Failed to post blocks:", postResult.error);
+        await client.chat.postMessage({
+          channel: inputs.channel_id,
+          text: `🚨 New Case Detected: ${caseId}\n\n*Summary:* ${triageResult.summary}\n*Urgency:* ${triageResult.urgency}\n\n_(Note: UI Card failed to render. Use Dashboard for full details)_`
+        });
+      }
 
       // Ephemeral acknowledgement to the reporter (Translated if necessary)
       try {

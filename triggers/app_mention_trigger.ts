@@ -19,7 +19,7 @@ const appMentionTrigger: Trigger<typeof AppMentionWorkflow.definition> = {
       value: "{{data.user_id}}",
     },
     message_ts: {
-      value: "{{data.message_ts}}",
+      value: "{{data.message.ts}}",
     },
     message_text: {
       value: "{{data.text}}",
