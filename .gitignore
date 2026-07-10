@@ -1,0 +1,17 @@
+# Deno / Node
+dist
+package
+.DS_Store
+node_modules/
+
+# Secrets
+.env
+.slack/
+
+# Editor
+.vscode/
+.idea/
+
+# MCP server specifics
+mcp-server/node_modules/
+mcp-server/dist/
