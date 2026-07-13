@@ -54,6 +54,7 @@ export async function resolveCaseModalHandler({ action, body, client }: any) {
   const viewMethod = body.view ? client.views.push : client.views.open;
   const res = await viewMethod.bind(client.views)({
     interactivity_pointer: arguments[0].interactivity?.interactivity_pointer || body.interactivity_pointer || body.interactivity?.interactivity_pointer,
+    trigger_id: body.trigger_id,
     view: {
       type: "modal",
       callback_id: `resolve_case_submit_${caseId}`,
