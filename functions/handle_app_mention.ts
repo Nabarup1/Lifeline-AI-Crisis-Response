@@ -250,7 +250,7 @@ export default SlackFunction(
     let weatherAlerts: any[] = [];
     try {
       let loc = "Houston, TX";
-      const configRes = await ctx.client.apps.datastore.get({ datastore: "config", id: "operating_location" });
+      const configRes = await ctx.client.apps.datastore.get({ datastore: "org_config", id: "operating_location" });
       if (configRes.ok && configRes.item?.value) loc = configRes.item.value;
 
       const weather = await checkWeatherAlerts(loc);

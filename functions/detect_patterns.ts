@@ -125,7 +125,7 @@ export default SlackFunction(
       let disasters: any[] = [];
       try {
         let loc = "Houston, TX";
-        const configRes = await client.apps.datastore.get({ datastore: "config", id: "operating_location" });
+        const configRes = await client.apps.datastore.get({ datastore: "org_config", id: "operating_location" });
         if (configRes.ok && configRes.item?.value) loc = configRes.item.value;
 
         const [weatherRes, disasterRes] = await Promise.allSettled([

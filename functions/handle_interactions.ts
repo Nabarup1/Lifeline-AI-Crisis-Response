@@ -518,14 +518,14 @@ export async function handleViewSubmission({ view, body, client }: any) {
     
     if (channel) {
       await client.apps.datastore.put({
-        datastore: "config",
+        datastore: "org_config",
         item: { key: "alert_channel", value: channel }
       });
     }
     
     if (location) {
       await client.apps.datastore.put({
-        datastore: "config",
+        datastore: "org_config",
         item: { key: "operating_location", value: location }
       });
     }
