@@ -109,7 +109,7 @@ export default SlackFunction(
         }
 
         case "status": {
-          const caseId = args[0]?.toUpperCase();
+          const caseId = args[1]?.toUpperCase();
           if (!caseId) {
             await postReply("⚠️ Please provide a Case ID. Example: `@Lifeline status CASE-1234`");
             break;
@@ -125,7 +125,7 @@ export default SlackFunction(
         }
 
         case "weather": {
-          const loc = args.join(" ") || "Miami, FL";
+          const loc = args.slice(1).join(" ") || "Miami, FL";
           const { checkWeatherAlerts } = await import("../lib/bridge_engine.ts");
           const { callGemini } = await import("../lib/llm_client.ts");
           
@@ -150,7 +150,7 @@ Please provide a short, accurate, and easy-to-read summary of the current weathe
         }
 
         case "volunteer": {
-          const sub = args[0];
+          const sub = args[1];
           if (sub === "register") {
             await postReply("Click below to register as a volunteer:", [
               {
@@ -179,8 +179,8 @@ Please provide a short, accurate, and easy-to-read summary of the current weathe
         }
 
         case "resources": {
-          const category = args[0];
-          const location = args.slice(1).join(" ");
+          const category = args[1];
+          const location = args.slice(2).join(" ");
           if (!category || !location) {
              await postReply("⚠️ Example: `@Lifeline resources shelter miami`");
              break;
