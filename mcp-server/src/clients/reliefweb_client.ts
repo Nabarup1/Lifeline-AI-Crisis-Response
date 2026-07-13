@@ -5,7 +5,13 @@ const RELIEFWEB_API_BASE = "https://api.reliefweb.int/v2";
 // ReliefWeb now requires a pre-approved appname (since Nov 2025).
 // Set your approved appname in the RELIEFWEB_APPNAME env var.
 // If unavailable, the client returns curated fallback data so the rest of the system keeps working.
-const APP_NAME = process.env.RELIEFWEB_APPNAME || "";
+let APP_NAME = "";
+try {
+  // @ts-ignore
+  APP_NAME = process?.env?.RELIEFWEB_APPNAME || "";
+} catch (e) {
+  // Safely fallback to empty in strictly sandboxed environments like Deno Slack SDK
+}
 
 export class ReliefWebClient {
   private async tryFetch(url: string, options?: RequestInit): Promise<Response | null> {

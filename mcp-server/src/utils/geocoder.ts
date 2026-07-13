@@ -11,7 +11,13 @@ export async function geocodeLocation(locationString: string): Promise<GeocodeRe
   const cached = cacheGet<GeocodeResult>(cacheKey);
   if (cached) return cached;
 
-  const apiKey = process.env.GOOGLE_MAPS_API_KEY;
+  let apiKey = "";
+  try {
+    // @ts-ignore
+    apiKey = process?.env?.GOOGLE_MAPS_API_KEY || "";
+  } catch (e) {
+    // Ignore Deno sandbox errors
+  }
   
   // Primary: Google Maps API (If Key is Provided)
   if (apiKey) {
