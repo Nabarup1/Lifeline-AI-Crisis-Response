@@ -37,7 +37,7 @@ export default SlackFunction(
       // 0. Check Configuration
       const configRes = await client.apps.datastore.get({
         datastore: "org_config",
-        id: "setup_complete"
+        key: "setup_complete"
       });
       
       if (!configRes.ok || !configRes.item || configRes.item.value !== "true") {
@@ -53,7 +53,7 @@ export default SlackFunction(
       try {
         const sessionRes = await client.apps.datastore.get({
           datastore: "user_sessions",
-          id: inputs.user_id
+          user_id: inputs.user_id
         });
         
         const now = Date.now();
@@ -122,7 +122,7 @@ export default SlackFunction(
       let weatherAlerts = [];
       try {
         let loc = "Houston, TX";
-        const configRes = await client.apps.datastore.get({ datastore: "config", id: "operating_location" });
+        const configRes = await client.apps.datastore.get({ datastore: "org_config", key: "operating_location" });
         if (configRes.ok && configRes.item?.value) loc = configRes.item.value;
 
         const weather = await checkWeatherAlerts(loc);
