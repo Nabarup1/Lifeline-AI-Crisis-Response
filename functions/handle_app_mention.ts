@@ -109,7 +109,7 @@ export default SlackFunction(
         }
 
         case "status": {
-          const caseId = args[1]?.toUpperCase();
+          const caseId = args[0]?.toUpperCase();
           if (!caseId) {
             await postReply("⚠️ Please provide a Case ID. Example: `@Lifeline status CASE-1234`");
             break;
@@ -124,8 +124,33 @@ export default SlackFunction(
           break;
         }
 
+        case "weather": {
+          const loc = args.join(" ") || "Miami, FL";
+          const { checkWeatherAlerts } = await import("../lib/bridge_engine.ts");
+          const { callGemini } = await import("../lib/llm_client.ts");
+          
+          await postReply(`Fetching weather data for *${loc}* via MCP...`);
+          
+          try {
+            const weather = await checkWeatherAlerts(loc);
+            if (weather.error) {
+              await postReply(`❌ Error fetching weather: ${weather.message}`);
+            } else {
+              const prompt = `You are a helpful crisis response agent. A user has asked for the weather in ${loc}. 
+Here is the JSON response from the OpenMeteo/NWS MCP tool:
+${JSON.stringify(weather, null, 2)}
+Please provide a short, accurate, and easy-to-read summary of the current weather, the forecast, and any alerts or extreme risks. Use Slack mrkdwn formatting. Do not include introductory filler. Keep it concise but super accurate.`;
+              const summary = await callGemini(prompt);
+              await postReply(summary);
+            }
+          } catch (e: any) {
+            await postReply(`❌ Failed to retrieve weather: ${e.message}`);
+          }
+          break;
+        }
+
         case "volunteer": {
-          const sub = args[1];
+          const sub = args[0];
           if (sub === "register") {
             await postReply("Click below to register as a volunteer:", [
               {
@@ -154,8 +179,8 @@ export default SlackFunction(
         }
 
         case "resources": {
-          const category = args[1];
-          const location = args.slice(2).join(" ");
+          const category = args[0];
+          const location = args.slice(1).join(" ");
           if (!category || !location) {
              await postReply("⚠️ Example: `@Lifeline resources shelter miami`");
              break;

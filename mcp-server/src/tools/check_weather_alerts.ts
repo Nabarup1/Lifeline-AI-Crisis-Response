@@ -14,10 +14,14 @@ export async function executeCheckWeatherAlerts(args: any) {
 
   const alerts = await nws.getAlertsByPoint(coords.latitude, coords.longitude);
   const risk = await openMeteo.getExtremeWeatherRisk(coords.latitude, coords.longitude);
+  const currentWeather = await openMeteo.getCurrentWeather(coords.latitude, coords.longitude);
+  const forecast = await openMeteo.getDailyForecast(coords.latitude, coords.longitude, args.forecastDays || 3);
 
   return JSON.stringify({
     location: coords.formattedAddress,
     coordinates: { lat: coords.latitude, lng: coords.longitude },
+    currentWeather,
+    forecast,
     nwsAlerts: alerts,
     extremeRisk: risk
   }, null, 2);
