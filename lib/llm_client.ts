@@ -1,50 +1,15 @@
-// Load the .env file manually since Deno does not auto load it,
-// and the Slack CLI does not inject env vars from .env either.
-// We read the file at import time so every module that depends on
-// this client gets the values without any extra setup.
-async function loadEnvFile(): Promise<void> {
-  try {
-    const envPaths = [".env", "../.env"];
-    for (const p of envPaths) {
-      try {
-        const text = await Deno.readTextFile(p);
-        for (const line of text.split("\n")) {
-          const trimmed = line.trim();
-          // Skip blank lines and comments
-          if (!trimmed || trimmed.startsWith("#")) continue;
-          const eqIndex = trimmed.indexOf("=");
-          if (eqIndex < 0) continue;
-          const key = trimmed.substring(0, eqIndex).trim();
-          const value = trimmed.substring(eqIndex + 1).trim();
-          // Only set if not already present in the process environment
-          if (!Deno.env.get(key)) {
-            Deno.env.set(key, value);
-          }
-        }
-        console.log(`Loaded env vars from ${p}`);
-        return;
-      } catch {
-        // File not found at this path, try the next one
-      }
-    }
-    console.warn("No .env file found in current or parent directory");
-  } catch (e) {
-    console.warn("Failed to load .env file:", e);
-  }
-}
-
-// Run the loader immediately when this module is first imported
-await loadEnvFile();
-
-// Pull values from the now populated environment
-const GEMINI_API_KEY = Deno.env.get("GEMINI_API_KEY") || "";
+import { GEMINI_API_KEY } from "./constants.ts";
 
 // Which model to use for all LLM calls. Change the GEMINI_MODEL value
 // in the .env file to swap models without touching code.
 // Free tier options:
 //   gemini-3.1-flash-lite    fastest, highest daily limits, good for JSON tasks
 //   gemma-4-27b-it           Gemma 4 27B, smarter but slightly lower limits
-const GEMINI_MODEL = Deno.env.get("GEMINI_MODEL") || "gemini-3.1-flash-lite";
+export let GEMINI_MODEL = "gemini-3.1-flash-lite";
+
+export function initLlmEnv(env: Record<string, string>) {
+  if (env["GEMINI_MODEL"]) GEMINI_MODEL = env["GEMINI_MODEL"];
+}
 
 // Extracts valid JSON from messy LLM output.
 // Some models output chain of thought reasoning before the actual JSON,

@@ -30,9 +30,14 @@ export const RenderDashboardDefinition = DefineFunction({
   },
 });
 
+import { initEnv } from "../lib/constants.ts";
+import { initLlmEnv } from "../lib/llm_client.ts";
+
 export default SlackFunction(
   RenderDashboardDefinition,
-  async ({ inputs, client }) => {
+  async ({ inputs, client, env }) => {
+    initEnv(env);
+    initLlmEnv(env);
     try {
       // 0. Check Configuration
       const configRes = await client.apps.datastore.get({
@@ -185,36 +190,46 @@ export default SlackFunction(
   }
 )
 .addBlockActionsHandler(/view_case_.*/, async (ctx) => {
+  initEnv(ctx.env); initLlmEnv(ctx.env);
   return viewCaseDetailsHandler(ctx);
 })
 .addBlockActionsHandler(/ack_alert_.*/, async (ctx) => {
+  initEnv(ctx.env); initLlmEnv(ctx.env);
   return acknowledgeAlertHandler(ctx);
 })
 .addBlockActionsHandler("register_volunteer", async (ctx) => {
+  initEnv(ctx.env); initLlmEnv(ctx.env);
   return registerVolunteerModalHandler(ctx);
 })
 .addBlockActionsHandler("start_onboarding", async (ctx) => {
+  initEnv(ctx.env); initLlmEnv(ctx.env);
   return startOnboardingHandler(ctx);
 })
 .addBlockActionsHandler("dismiss_catchup", async (ctx) => {
   return { outputs: {} };
 })
 .addBlockActionsHandler("search_history", async (ctx) => {
+  initEnv(ctx.env); initLlmEnv(ctx.env);
   return searchHistoryModalHandler(ctx);
 })
 .addBlockActionsHandler("open_settings", async (ctx) => {
+  initEnv(ctx.env); initLlmEnv(ctx.env);
   return settingsModalHandler(ctx);
 })
 .addViewSubmissionHandler("register_volunteer_submit", async (ctx) => {
+  initEnv(ctx.env); initLlmEnv(ctx.env);
   return handleViewSubmission(ctx);
 })
 .addViewSubmissionHandler("search_history_submit", async (ctx) => {
+  initEnv(ctx.env); initLlmEnv(ctx.env);
   return handleViewSubmission(ctx);
 })
 .addViewSubmissionHandler("onboarding_submit", async (ctx) => {
+  initEnv(ctx.env); initLlmEnv(ctx.env);
   return handleOnboardingSubmission(ctx);
 })
 .addViewSubmissionHandler("settings_submit", async (ctx) => {
+  initEnv(ctx.env); initLlmEnv(ctx.env);
   return handleViewSubmission(ctx);
 })
 .addBlockActionsHandler("view_all_cases", async (ctx) => {

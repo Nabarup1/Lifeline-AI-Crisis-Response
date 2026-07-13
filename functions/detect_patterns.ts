@@ -23,9 +23,14 @@ export const DetectPatternsDefinition = DefineFunction({
   },
 });
 
+import { initEnv } from "../lib/constants.ts";
+import { initLlmEnv } from "../lib/llm_client.ts";
+
 export default SlackFunction(
   DetectPatternsDefinition,
-  async ({ client }) => {
+  async ({ client, env }) => {
+    initEnv(env);
+    initLlmEnv(env);
     try {
       console.log("[PatternDetection] Starting scheduled scan...");
 

@@ -210,30 +210,41 @@ export async function executeCaseIntake(client: any, inputs: any) {
     }
 }
 
+import { initEnv } from "../lib/constants.ts";
+import { initLlmEnv } from "../lib/llm_client.ts";
+
 export default SlackFunction(
   HandleCaseIntakeDefinition,
-  async ({ inputs, client }) => {
+  async ({ inputs, client, env }) => {
+    initEnv(env); initLlmEnv(env);
     return await executeCaseIntake(client, inputs);
   }
 )
 .addBlockActionsHandler(/lifeline_assign_.*/, async (ctx) => {
+  initEnv(ctx.env); initLlmEnv(ctx.env);
   return assignVolunteerHandler(ctx);
 })
 .addBlockActionsHandler(/lifeline_claim_.*/, async (ctx) => {
+  initEnv(ctx.env); initLlmEnv(ctx.env);
   return claimCaseHandler(ctx);
 })
 .addBlockActionsHandler(/lifeline_escalate_.*/, async (ctx) => {
+  initEnv(ctx.env); initLlmEnv(ctx.env);
   return escalateCaseHandler(ctx);
 })
 .addBlockActionsHandler(/lifeline_resolve_.*/, async (ctx) => {
+  initEnv(ctx.env); initLlmEnv(ctx.env);
   return resolveCaseModalHandler(ctx);
 })
 .addBlockActionsHandler(/lifeline_override_.*/, async (ctx) => {
+  initEnv(ctx.env); initLlmEnv(ctx.env);
   return overrideTriageModalHandler(ctx);
 })
 .addViewSubmissionHandler(/resolve_case_submit_.*/, async (ctx) => {
+  initEnv(ctx.env); initLlmEnv(ctx.env);
   return handleViewSubmission(ctx);
 })
 .addViewSubmissionHandler(/override_triage_submit_.*/, async (ctx) => {
+  initEnv(ctx.env); initLlmEnv(ctx.env);
   return handleViewSubmission(ctx);
 });

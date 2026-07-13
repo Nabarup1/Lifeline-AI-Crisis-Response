@@ -5,10 +5,16 @@ export const PATTERN_DETECTION_INTERVAL_HOURS = 6;
 export const PATTERN_SPIKE_THRESHOLD_PERCENT = 200;
 export const VOLUNTEER_MAX_DEFAULT_CAPACITY = 5;
 
-// Environment variable fallbacks
-export const MCP_SERVER_URL = Deno.env.get("MCP_SERVER_URL") || "http://localhost:3001";
-export const LLM_PROVIDER = Deno.env.get("LLM_PROVIDER") || "gemini";
-export const GEMINI_API_KEY = Deno.env.get("GEMINI_API_KEY") || "";
+// Environment variable fallbacks (populated at runtime by initEnv)
+export let MCP_SERVER_URL = "http://localhost:3001";
+export let LLM_PROVIDER = "gemini";
+export let GEMINI_API_KEY = "";
+
+export function initEnv(env: Record<string, string>) {
+  if (env["MCP_SERVER_URL"]) MCP_SERVER_URL = env["MCP_SERVER_URL"];
+  if (env["LLM_PROVIDER"]) LLM_PROVIDER = env["LLM_PROVIDER"];
+  if (env["GEMINI_API_KEY"]) GEMINI_API_KEY = env["GEMINI_API_KEY"];
+}
 
 export const URGENCY_COLORS: Record<string, string> = {
   critical: "#FF0000",

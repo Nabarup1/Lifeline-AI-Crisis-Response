@@ -22,9 +22,14 @@ export const HandleAppMentionDefinition = DefineFunction({
   },
 });
 
+import { initEnv } from "../lib/constants.ts";
+import { initLlmEnv } from "../lib/llm_client.ts";
+
 export default SlackFunction(
   HandleAppMentionDefinition,
-  async ({ inputs, client }) => {
+  async ({ inputs, client, env }) => {
+    initEnv(env);
+    initLlmEnv(env);
     const { user_id, channel_id, message_text, message_ts } = inputs;
     // Strip the bot mention
     const text = message_text.replace(/<@[A-Z0-9]+>/g, '').trim().toLowerCase();
@@ -346,42 +351,52 @@ export default SlackFunction(
   return settingsModalHandler(ctx);
 })
 .addBlockActionsHandler(/view_case_.*/, async (ctx) => {
+  initEnv(ctx.env); initLlmEnv(ctx.env);
   const { viewCaseDetailsHandler } = await import("./handle_interactions.ts");
   return viewCaseDetailsHandler(ctx);
 })
 .addBlockActionsHandler(/ack_alert_.*/, async (ctx) => {
+  initEnv(ctx.env); initLlmEnv(ctx.env);
   const { acknowledgeAlertHandler } = await import("./handle_interactions.ts");
   return acknowledgeAlertHandler(ctx);
 })
 .addViewSubmissionHandler("register_volunteer_submit", async (ctx) => {
+  initEnv(ctx.env); initLlmEnv(ctx.env);
   const { handleViewSubmission } = await import("./handle_interactions.ts");
   return handleViewSubmission(ctx);
 })
 .addViewSubmissionHandler("search_history_submit", async (ctx) => {
+  initEnv(ctx.env); initLlmEnv(ctx.env);
   const { handleViewSubmission } = await import("./handle_interactions.ts");
   return handleViewSubmission(ctx);
 })
 .addViewSubmissionHandler("onboarding_submit", async (ctx) => {
+  initEnv(ctx.env); initLlmEnv(ctx.env);
   const { handleOnboardingSubmission } = await import("./handle_onboarding.ts");
   return handleOnboardingSubmission(ctx);
 })
 .addViewSubmissionHandler("settings_submit", async (ctx) => {
+  initEnv(ctx.env); initLlmEnv(ctx.env);
   const { handleViewSubmission } = await import("./handle_interactions.ts");
   return handleViewSubmission(ctx);
 })
 .addBlockActionsHandler("view_all_cases", async (ctx) => {
+  initEnv(ctx.env); initLlmEnv(ctx.env);
   const { viewAllCasesHandler } = await import("./handle_interactions.ts");
   return viewAllCasesHandler(ctx);
 })
 .addBlockActionsHandler("run_pattern_check", async (ctx) => {
+  initEnv(ctx.env); initLlmEnv(ctx.env);
   const { runPatternCheckHandler } = await import("./handle_interactions.ts");
   return runPatternCheckHandler(ctx);
 })
 .addBlockActionsHandler("open_help", async (ctx) => {
+  initEnv(ctx.env); initLlmEnv(ctx.env);
   const { openHelpHandler } = await import("./handle_interactions.ts");
   return openHelpHandler(ctx);
 })
 .addBlockActionsHandler("register_volunteer", async (ctx) => {
+  initEnv(ctx.env); initLlmEnv(ctx.env);
   const { registerVolunteerModalHandler } = await import("./handle_interactions.ts");
   return registerVolunteerModalHandler(ctx);
 });
