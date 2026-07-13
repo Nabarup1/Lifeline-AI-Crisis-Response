@@ -407,8 +407,30 @@ export async function handleViewSubmission({ view, body, client }: any) {
           });
         }
       }
+
+      if (caseRes.item.channel_id && caseRes.item.thread_ts) {
+        await client.chat.postMessage({
+          channel: caseRes.item.channel_id,
+          thread_ts: caseRes.item.thread_ts,
+          text: `✅ *Case Resolved*\n*Notes:* ${notes}\nResolved by <@${body.user.id}>`
+        });
+      }
     }
 
+    return {
+      response_action: "update",
+      view: {
+        type: "modal",
+        title: { type: "plain_text", text: "Success" },
+        close: { type: "plain_text", text: "Close" },
+        blocks: [
+          {
+            type: "section",
+            text: { type: "mrkdwn", text: `✅ Case *${caseId}* has been successfully resolved.` }
+          }
+        ]
+      }
+    };
   } else if (cbId === "register_volunteer_submit") {
     const skills = view.state.values.skills_block.skills.value.split(',').map((s: string) => s.trim());
     const zones = view.state.values.zones_block.zones.value.split(',').map((s: string) => s.trim());
@@ -455,6 +477,11 @@ export async function handleViewSubmission({ view, body, client }: any) {
     const caseId = cbId.replace("override_triage_submit_", "");
     const urgency = view.state.values.urgency_block.urgency.value.toLowerCase();
     
+    const caseRes = await client.apps.datastore.get({
+      datastore: "cases",
+      id: caseId
+    });
+
     await client.apps.datastore.update({
       datastore: "cases",
       item: {
@@ -462,6 +489,29 @@ export async function handleViewSubmission({ view, body, client }: any) {
         urgency: urgency
       }
     });
+
+    if (caseRes.ok && caseRes.item && caseRes.item.channel_id && caseRes.item.thread_ts) {
+      await client.chat.postMessage({
+        channel: caseRes.item.channel_id,
+        thread_ts: caseRes.item.thread_ts,
+        text: `⚠️ *Triage Overridden*\nUrgency updated to *${urgency}* by <@${body.user.id}>`
+      });
+    }
+
+    return {
+      response_action: "update",
+      view: {
+        type: "modal",
+        title: { type: "plain_text", text: "Success" },
+        close: { type: "plain_text", text: "Close" },
+        blocks: [
+          {
+            type: "section",
+            text: { type: "mrkdwn", text: `✅ Triage urgency for *${caseId}* has been updated to *${urgency}*.` }
+          }
+        ]
+      }
+    };
   } else if (cbId === "settings_submit") {
     const channel = view.state.values.alert_channel_block?.channel?.value;
     const location = view.state.values.operating_location_block?.location?.value;
