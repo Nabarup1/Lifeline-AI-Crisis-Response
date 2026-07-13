@@ -1,8 +1,8 @@
-# Guardian: AI Crisis Coordination Agent 🛡️
+# Lifeline: AI Crisis Coordination Agent 🛡️
 
 **Winner/Submission for Slack Agent Builder Challenge 2026**
 
-Guardian is an advanced, AI-powered Slack Agent designed to coordinate disaster response, triage incoming crisis reports, and intelligently allocate humanitarian resources in real-time. It leverages the cutting-edge Slack Developer stack, integrating all three required technologies to create a seamless, context-aware command center directly inside Slack.
+Lifeline is an advanced, AI-powered Slack Agent designed to coordinate disaster response, triage incoming crisis reports, and intelligently allocate humanitarian resources in real-time. It leverages the cutting-edge Slack Developer stack, integrating all three required technologies to create a seamless, context-aware command center directly inside Slack.
 
 ## 🏗️ Architecture
 
