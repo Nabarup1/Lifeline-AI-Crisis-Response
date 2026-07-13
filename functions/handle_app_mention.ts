@@ -342,7 +342,7 @@ export default SlackFunction(
 // Dashboard view interaction handlers
 .addBlockActionsHandler("start_onboarding", async (ctx) => {
   initEnv(ctx.env); initLlmEnv(ctx.env);
-  const { startOnboardingHandler } = await import("./handle_interactions.ts");
+  const { startOnboardingHandler } = await import("./handle_onboarding.ts");
   return startOnboardingHandler(ctx);
 })
 .addBlockActionsHandler("dismiss_catchup", async (ctx) => {

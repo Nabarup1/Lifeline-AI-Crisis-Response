@@ -11,6 +11,7 @@ export async function assignVolunteerHandler({ action, body, client }: any) {
   const volunteerId = parts[3] || body.user.id; // fallback to the user clicking if not specified
 
   await handleCaseAssignment(client, caseId, volunteerId, body.message?.ts, body.channel?.id);
+  return {};
 }
 
 // 2. Claim Case (Self Assign)
@@ -20,6 +21,7 @@ export async function claimCaseHandler({ action, body, client }: any) {
   const userId = body.user.id;
   
   await handleCaseAssignment(client, caseId, userId, body.message?.ts, body.channel?.id);
+  return {};
 }
 
 // 3. Escalate Case
@@ -42,6 +44,7 @@ export async function escalateCaseHandler({ action, body, client }: any) {
       text: `🚨 *CRITICAL UPDATE*: Case *${caseId}* has been escalated by <@${body.user.id}>. Immediate attention is required.`
     });
   }
+  return {};
 }
 
 // 4. Resolve Case Modal Open
@@ -50,7 +53,7 @@ export async function resolveCaseModalHandler({ action, body, client }: any) {
   
   const viewMethod = body.view ? client.views.push : client.views.open;
   await viewMethod.bind(client.views)({
-    interactivity_pointer: body.interactivity_pointer || body.interactivity?.interactivity_pointer,
+    interactivity_pointer: arguments[0].interactivity?.interactivity_pointer || body.interactivity_pointer || body.interactivity?.interactivity_pointer,
     view: {
       type: "modal",
       callback_id: `resolve_case_submit_${caseId}`,
@@ -84,13 +87,14 @@ export async function acknowledgeAlertHandler({ action, body, client }: any) {
       acknowledgedBy: body.user.id
     }
   });
+  return {};
 }
 
 // 6. Register Volunteer Modal Open
 export async function registerVolunteerModalHandler({ body, client }: any) {
   const viewMethod = body.view ? client.views.push : client.views.open;
   await viewMethod.bind(client.views)({
-    interactivity_pointer: body.interactivity_pointer || body.interactivity?.interactivity_pointer,
+    interactivity_pointer: arguments[0].interactivity?.interactivity_pointer || body.interactivity_pointer || body.interactivity?.interactivity_pointer,
     view: {
       type: "modal",
       callback_id: `register_volunteer_submit`,
@@ -146,7 +150,7 @@ export async function viewCaseDetailsHandler({ action, body, client }: any) {
 
   const viewMethod = body.view ? client.views.push : client.views.open;
   await viewMethod.bind(client.views)({
-    interactivity_pointer: body.interactivity_pointer || body.interactivity?.interactivity_pointer,
+    interactivity_pointer: arguments[0].interactivity?.interactivity_pointer || body.interactivity_pointer || body.interactivity?.interactivity_pointer,
     view: {
       type: "modal",
       title: { type: "plain_text", text: `Case ${caseId}` },
@@ -175,7 +179,7 @@ export async function viewCaseDetailsHandler({ action, body, client }: any) {
 export async function searchHistoryModalHandler({ body, client }: any) {
   const viewMethod = body.view ? client.views.push : client.views.open;
   await viewMethod.bind(client.views)({
-    interactivity_pointer: body.interactivity_pointer || body.interactivity?.interactivity_pointer,
+    interactivity_pointer: arguments[0].interactivity?.interactivity_pointer || body.interactivity_pointer || body.interactivity?.interactivity_pointer,
     view: {
       type: "modal",
       callback_id: "search_history_submit",
@@ -201,7 +205,7 @@ export async function overrideTriageModalHandler({ action, body, client }: any) 
   const caseId = action.action_id.split('_')[2];
   const viewMethod = body.view ? client.views.push : client.views.open;
   await viewMethod.bind(client.views)({
-    interactivity_pointer: body.interactivity_pointer || body.interactivity?.interactivity_pointer,
+    interactivity_pointer: arguments[0].interactivity?.interactivity_pointer || body.interactivity_pointer || body.interactivity?.interactivity_pointer,
     view: {
       type: "modal",
       callback_id: `override_triage_submit_${caseId}`,
@@ -227,7 +231,7 @@ export async function overrideTriageModalHandler({ action, body, client }: any) 
 export async function settingsModalHandler({ body, client }: any) {
   const viewMethod = body.view ? client.views.push : client.views.open;
   await viewMethod.bind(client.views)({
-    interactivity_pointer: body.interactivity_pointer || body.interactivity?.interactivity_pointer,
+    interactivity_pointer: arguments[0].interactivity?.interactivity_pointer || body.interactivity_pointer || body.interactivity?.interactivity_pointer,
     view: {
       type: "modal",
       callback_id: "settings_submit",
@@ -281,7 +285,7 @@ export async function viewAllCasesHandler({ body, client }: any) {
 
   const viewMethod = body.view ? client.views.push : client.views.open;
   await viewMethod.bind(client.views)({
-    interactivity_pointer: body.interactivity_pointer || body.interactivity?.interactivity_pointer,
+    interactivity_pointer: arguments[0].interactivity?.interactivity_pointer || body.interactivity_pointer || body.interactivity?.interactivity_pointer,
     view: {
       type: "modal",
       title: { type: "plain_text", text: "All Cases" },
@@ -301,7 +305,7 @@ export async function runPatternCheckHandler({ body, client }: any) {
 
   const viewMethod = body.view ? client.views.push : client.views.open;
   await viewMethod.bind(client.views)({
-    interactivity_pointer: body.interactivity_pointer || body.interactivity?.interactivity_pointer,
+    interactivity_pointer: arguments[0].interactivity?.interactivity_pointer || body.interactivity_pointer || body.interactivity?.interactivity_pointer,
     view: {
       type: "modal",
       title: { type: "plain_text", text: "Pattern Check" },
@@ -320,7 +324,7 @@ export async function runPatternCheckHandler({ body, client }: any) {
 export async function openHelpHandler({ body, client }: any) {
   const viewMethod = body.view ? client.views.push : client.views.open;
   await viewMethod.bind(client.views)({
-    interactivity_pointer: body.interactivity_pointer || body.interactivity?.interactivity_pointer,
+    interactivity_pointer: arguments[0].interactivity?.interactivity_pointer || body.interactivity_pointer || body.interactivity?.interactivity_pointer,
     view: {
       type: "modal",
       title: { type: "plain_text", text: "Lifeline Help" },
