@@ -48,9 +48,14 @@ export async function escalateCaseHandler({ action, body, client }: any) {
 }
 
 // 4. Resolve Case Modal Open
-export async function resolveCaseModalHandler({ action, body, client }: any) {
+export async function resolveCaseModalHandler({ action, body, client, interactivity }: any) {
   const caseId = action.action_id.split('_')[2];
   
+  console.log("Resolve Case Body Interactivity:", JSON.stringify({
+    interactivity_pointer: interactivity?.interactivity_pointer || arguments[0].interactivity?.interactivity_pointer || body.interactivity_pointer || body.interactivity?.interactivity_pointer,
+    trigger_id: body.trigger_id,
+  }));
+
   const viewMethod = body.view ? client.views.push : client.views.open;
   const res = await viewMethod.bind(client.views)({
     interactivity_pointer: arguments[0].interactivity?.interactivity_pointer || body.interactivity_pointer || body.interactivity?.interactivity_pointer,
@@ -75,9 +80,11 @@ export async function resolveCaseModalHandler({ action, body, client }: any) {
       ]
     }
   });
+  console.log("Slack API Response:", JSON.stringify(res, null, 2));
   if (!res.ok) {
     console.error("Failed to open resolve case modal:", JSON.stringify(res, null, 2));
   }
+  return {};
 }
 
 // 5. Acknowledge Alert
@@ -205,11 +212,16 @@ export async function searchHistoryModalHandler({ body, client }: any) {
 }
 
 // 9. Override Triage
-export async function overrideTriageModalHandler({ action, body, client }: any) {
+export async function overrideTriageModalHandler({ action, body, client, interactivity }: any) {
   const caseId = action.action_id.split('_')[2];
+  console.log("Override Triage Body Interactivity:", JSON.stringify({
+    interactivity_pointer: interactivity?.interactivity_pointer || arguments[0].interactivity?.interactivity_pointer || body.interactivity_pointer || body.interactivity?.interactivity_pointer,
+    trigger_id: body.trigger_id,
+  }));
   const viewMethod = body.view ? client.views.push : client.views.open;
-  await viewMethod.bind(client.views)({
+  const res = await viewMethod.bind(client.views)({
     interactivity_pointer: arguments[0].interactivity?.interactivity_pointer || body.interactivity_pointer || body.interactivity?.interactivity_pointer,
+    trigger_id: body.trigger_id,
     view: {
       type: "modal",
       callback_id: `override_triage_submit_${caseId}`,
@@ -229,6 +241,11 @@ export async function overrideTriageModalHandler({ action, body, client }: any) 
       ]
     }
   });
+  console.log("Slack API Response:", JSON.stringify(res, null, 2));
+  if (!res.ok) {
+    console.error("Failed to open override triage modal:", JSON.stringify(res, null, 2));
+  }
+  return {};
 }
 
 // 10. Settings Modal
