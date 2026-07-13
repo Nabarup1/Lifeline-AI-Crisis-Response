@@ -140,7 +140,7 @@ export default SlackFunction(
 Here is the JSON response from the OpenMeteo/NWS MCP tool:
 ${JSON.stringify(weather, null, 2)}
 Please provide a short, accurate, and easy-to-read summary of the current weather, the forecast, and any alerts or extreme risks. Use Slack mrkdwn formatting. Do not include introductory filler. Keep it concise but super accurate.`;
-              const summary = await callGemini(prompt);
+              const summary = await callGemini("You are a helpful crisis response agent.", prompt);
               await postReply(summary);
             }
           } catch (e: any) {
