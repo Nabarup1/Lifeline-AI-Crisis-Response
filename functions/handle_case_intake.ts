@@ -149,6 +149,7 @@ export async function executeCaseIntake(client: any, inputs: any) {
       
       if (!postResult.ok) {
         console.error("Failed to post blocks:", postResult.error);
+        console.log(JSON.stringify(processedBlocks, null, 2));
         await client.chat.postMessage({
           channel: inputs.channel_id,
           text: `🚨 New Case Detected: ${caseId}\n\n*Summary:* ${triageResult.summary}\n*Urgency:* ${triageResult.urgency}\n\n_(Note: UI Card failed to render. Use Dashboard for full details)_`

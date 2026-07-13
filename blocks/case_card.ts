@@ -151,7 +151,7 @@ export function buildCaseIntakeCard(
           type: "mrkdwn",
           text: `*Case ${history.id}*\n*Summary:* ${history.summary}\n*Resolution:* ${history.resolution}`
         },
-        accessory: history.url ? {
+        accessory: (history.url && history.url.startsWith("http")) ? {
           type: "button",
           text: {
             type: "plain_text",
