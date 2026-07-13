@@ -9,6 +9,7 @@ const appMentionTrigger: Trigger<typeof AppMentionWorkflow.definition> = {
   workflow: `#/workflows/${AppMentionWorkflow.definition.callback_id}`,
   event: {
     event_type: "slack#/events/app_mentioned",
+    channel_ids: ["C0BEEM6912A"], // Required by Slack for event triggers
   },
   inputs: {
     channel_id: {
