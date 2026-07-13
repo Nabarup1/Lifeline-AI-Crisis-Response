@@ -44,20 +44,28 @@ graph TD
 
 ## 🚀 Setup & Installation
 
-1. **Clone the repo and configure Slack CLI:**
+1. **Clone the repository:**
    ```bash
+   git clone https://github.com/Nabarup1/Lifeline-AI-Crisis-Response.git
+   cd Lifeline-AI-Crisis-Response
+   ```
+2. **Install dependencies and configure Slack CLI:**
+   ```bash
+   npm install
    slack login
    ```
-2. **Create the environment variables:**
-   Create a `.env` file in the root directory:
-   ```env
-   GEMINI_API_KEY=your_api_key_here
+3. **Configure the environment variables:**
+   Copy the example environment file and insert your API keys:
+   ```bash
+   cp .env.example .env
    ```
-3. **Start the local MCP server and Slack App:**
+   *(Make sure to open `.env` and add your Google Gemini API Key)*
+
+4. **Start the local MCP server and Slack App:**
    ```bash
    slack run
    ```
-4. **Create the Triggers:**
+5. **Create the Triggers:**
    In another terminal, install the essential triggers to your workspace:
    ```bash
    slack trigger create --trigger-def triggers/app_mention_trigger.ts
