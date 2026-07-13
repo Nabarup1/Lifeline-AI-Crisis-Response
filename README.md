@@ -51,7 +51,9 @@ graph TD
    ```
 2. **Install dependencies and configure Slack CLI:**
    ```bash
+   cd mcp-server
    npm install
+   cd ..
    slack login
    ```
 3. **Configure the environment variables:**
