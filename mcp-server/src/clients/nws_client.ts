@@ -60,13 +60,18 @@ export class NwsApiClient {
 
   public async getAlertsByPoint(latitude: number, longitude: number): Promise<WeatherAlert[]> {
     const url = `${NWS_API_BASE}/alerts/active?point=${latitude},${longitude}`;
-    const data = await this.fetchWithRetry(url);
-    
-    if (!data || !data.features) {
+    try {
+      const data = await this.fetchWithRetry(url);
+      
+      if (!data || !data.features) {
+        return [];
+      }
+
+      return data.features.map(this.mapFeatureToAlert);
+    } catch (e: any) {
+      console.error(`NWS alerts unavailable for point ${latitude},${longitude} (likely outside US):`, e.message);
       return [];
     }
-
-    return data.features.map(this.mapFeatureToAlert);
   }
 
   public async getForecast(latitude: number, longitude: number, days: number = 3): Promise<WeatherForecast[]> {
