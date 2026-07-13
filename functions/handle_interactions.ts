@@ -52,7 +52,7 @@ export async function resolveCaseModalHandler({ action, body, client }: any) {
   const caseId = action.action_id.split('_')[2];
   
   const viewMethod = body.view ? client.views.push : client.views.open;
-  await viewMethod.bind(client.views)({
+  const res = await viewMethod.bind(client.views)({
     interactivity_pointer: arguments[0].interactivity?.interactivity_pointer || body.interactivity_pointer || body.interactivity?.interactivity_pointer,
     view: {
       type: "modal",
@@ -74,6 +74,9 @@ export async function resolveCaseModalHandler({ action, body, client }: any) {
       ]
     }
   });
+  if (!res.ok) {
+    console.error("Failed to open resolve case modal:", JSON.stringify(res, null, 2));
+  }
 }
 
 // 5. Acknowledge Alert
