@@ -209,6 +209,7 @@ export default SlackFunction(
   }
 )
 .addBlockActionsHandler("open_dashboard_button", async (ctx) => {
+  initEnv(ctx.env); initLlmEnv(ctx.env);
   try {
     const { buildDashboardView, buildSetupView } = await import("../blocks/dashboard_view.ts");
     const { checkWeatherAlerts } = await import("../lib/bridge_engine.ts");
@@ -339,14 +340,21 @@ export default SlackFunction(
   return handleViewSubmission(ctx);
 })
 // Dashboard view interaction handlers
+.addBlockActionsHandler("start_onboarding", async (ctx) => {
+  initEnv(ctx.env); initLlmEnv(ctx.env);
+  const { startOnboardingHandler } = await import("./handle_interactions.ts");
+  return startOnboardingHandler(ctx);
+})
 .addBlockActionsHandler("dismiss_catchup", async (ctx) => {
   return { outputs: {} };
 })
 .addBlockActionsHandler("search_history", async (ctx) => {
+  initEnv(ctx.env); initLlmEnv(ctx.env);
   const { searchHistoryModalHandler } = await import("./handle_interactions.ts");
   return searchHistoryModalHandler(ctx);
 })
 .addBlockActionsHandler("open_settings", async (ctx) => {
+  initEnv(ctx.env); initLlmEnv(ctx.env);
   const { settingsModalHandler } = await import("./handle_interactions.ts");
   return settingsModalHandler(ctx);
 })
